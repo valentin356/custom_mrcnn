@@ -502,7 +502,7 @@ def display_weight_stats(model):
     
 def save_image(image, boxes, masks, class_ids, class_names, savename,
                       scores=None, title="",
-                      figsize=(16, 16), ax=None,
+                      ax=None,
                       show_mask=True, show_bbox=True,
                       colors=None, captions=None):
     """
@@ -514,7 +514,6 @@ def save_image(image, boxes, masks, class_ids, class_names, savename,
     scores: (optional) confidence scores for each box
     title: (optional) Figure title
     show_mask, show_bbox: To show masks and bounding boxes or not
-    figsize: (optional) the size of the image
     colors: (optional) An array or colors to use with each object
     captions: (optional) A list of strings to use as captions for each object
     """
@@ -528,7 +527,7 @@ def save_image(image, boxes, masks, class_ids, class_names, savename,
     # If no axis is passed, create one and automatically call show()
     auto_show = False
     if not ax:
-        _, ax = plt.subplots(1, figsize=figsize)
+        _, ax = plt.subplots(1)
         auto_show = True
 
     # Generate random colors
@@ -536,8 +535,8 @@ def save_image(image, boxes, masks, class_ids, class_names, savename,
 
     # Show area outside image boundaries.
     height, width = image.shape[:2]
-    ax.set_ylim(height + 10, -10)
-    ax.set_xlim(-10, width + 10)
+    ax.set_ylim(height, 0)
+    ax.set_xlim(0, width)
     ax.axis('off')
     ax.set_title(title)
 
