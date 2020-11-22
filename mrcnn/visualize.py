@@ -500,7 +500,7 @@ def display_weight_stats(model):
             ])
     display_table(table)
     
-def save_image(image, boxes, masks, class_ids, class_names,
+def save_image(image, boxes, masks, class_ids, class_names, savename,
                       scores=None, title="",
                       figsize=(16, 16), ax=None,
                       show_mask=True, show_bbox=True,
@@ -510,6 +510,7 @@ def save_image(image, boxes, masks, class_ids, class_names,
     masks: [height, width, num_instances]
     class_ids: [num_instances]
     class_names: list of class names of the dataset
+    savename: filename of saved image
     scores: (optional) confidence scores for each box
     title: (optional) Figure title
     show_mask, show_bbox: To show masks and bounding boxes or not
@@ -583,7 +584,7 @@ def save_image(image, boxes, masks, class_ids, class_names,
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
     ax.imshow(masked_image.astype(np.uint8))
-    plt.savefig(detektalt_nev)
+    plt.savefig(savename)
     
     if auto_show:
         plt.show()
