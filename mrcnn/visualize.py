@@ -163,7 +163,7 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
     ax.imshow(masked_image.astype(np.uint8))
-    plt.savefig('F:/la/output_{}.jpg'.format(time.strftime("%Y%m%d-%H%M%S")))#to save file in local directory for n no of input images with date and time 
+    plt.savefig(savename)#to save file in local directory for n no of input images with date and time 
     
    # plt.close()
     #import time
