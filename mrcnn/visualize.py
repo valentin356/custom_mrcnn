@@ -500,7 +500,7 @@ def display_weight_stats(model):
             ])
     display_table(table)
 
-    def display_results(image, boxes, masks, class_ids, class_names, scores=None,
+def display_results(image, boxes, masks, class_ids, class_names, scores=None,
                         show_mask=True, show_bbox=True, display_img=True,
                         save_img=True, save_dir=None, img_name=None):
         """
