@@ -583,8 +583,7 @@ def save_image(image, boxes, masks, class_ids, class_names, savename,
             verts = np.fliplr(verts) - 1
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
-    print(masked_image.shape)
-    cv2.imwrite(savename, masked_image)
+    plt.savefig(savename,bbox_inches='tight')
     
     if auto_show:
         plt.show()
