@@ -583,7 +583,6 @@ def save_image(image, boxes, masks, class_ids, class_names, savename,
             verts = np.fliplr(verts) - 1
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
-    ax.imshow(masked_image.astype(np.uint8))
     cv2.imwrite(savename, masked_image)
     
     if auto_show:
