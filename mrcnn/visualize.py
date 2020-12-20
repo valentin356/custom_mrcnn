@@ -12,7 +12,7 @@ import sys
 import random
 import itertools
 import colorsys
-
+import cv2
 import numpy as np
 from skimage.measure import find_contours
 import matplotlib.pyplot as plt
@@ -163,7 +163,7 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
     ax.imshow(masked_image.astype(np.uint8))
-    plt.savefig(sv_name)
+    cv2.imwrite(sv_name, masked_image)
     if auto_show:
         plt.show()
 
