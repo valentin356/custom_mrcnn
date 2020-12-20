@@ -501,90 +501,47 @@ def display_weight_stats(model):
             ])
     display_table(table)
     
-def save_image(image, boxes, masks, class_ids, class_names, savename,
-                      scores=None, title="",
-                      ax=None,
-                      show_mask=True, show_bbox=True,
-                      colors=None, captions=None):
-    """
-    boxes: [num_instance, (y1, x1, y2, x2, class_id)] in image coordinates.
-    masks: [height, width, num_instances]
-    class_ids: [num_instances]
-    class_names: list of class names of the dataset
-    savename: filename of saved image
-    scores: (optional) confidence scores for each box
-    title: (optional) Figure title
-    show_mask, show_bbox: To show masks and bounding boxes or not
-    colors: (optional) An array or colors to use with each object
-    captions: (optional) A list of strings to use as captions for each object
-    """
-    # Number of instances
-    N = boxes.shape[0]
-    if not N:
-        print("\n*** No instances to display *** \n")
-    else:
-        assert boxes.shape[0] == masks.shape[-1] == class_ids.shape[0]
+def display_results(image, boxes, masks, class_ids, class_names, scores=None,
+                        show_mask=True, show_bbox=True, display_img=True,
+                        save_img=True, save_dir=None, img_name=None):
+        """
+        boxes: [num_instance, (y1, x1, y2, x2, class_id)] in image coordinates.
+        masks: [height, width, num_instances]
+        class_ids: [num_instances]
+        class_names: list of class names of the dataset (Without Background)
+        scores: (optional) confidence scores for each box
+        show_mask, show_bbox: To show masks and bounding boxes or not
+        display_img: To display the image in popup
+        save_img: To save the predict image
+        save_dir: If save_img is True, the directory where you want to save the predict image
+        img_name: If save_img is True, the name of the predict image
 
-    # If no axis is passed, create one and automatically call show()
-    auto_show = False
-    if not ax:
-        _, ax = plt.subplots(1)
-        auto_show = True
+        """
+        n_instances = boxes.shape[0]
+        colors = color_map()
+        for k in range(n_instances):
+            color = colors[class_ids[k]].astype(np.int)
+            if show_bbox:
+                box = boxes[k]
+                cls = class_names[class_ids[k]-1]  # Skip the Background
+                score = scores[k]
+                cv2.rectangle(image, (box[1], box[0]), (box[3], box[2]), color, 1)
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                cv2.putText(image, '{}: {:.3f}'.format(cls, score), (box[1], box[0]),
+                            font, 0.4, (0, 255, 255), 1, cv2.LINE_AA)
 
-    # Generate random colors
-    colors = colors or random_colors(N)
+            if show_mask:
+                mask = masks[:, :, k]
+                color_mask = np.zeros((mask.shape[0], mask.shape[1], 3), dtype=np.int)
+                color_mask[mask] = color
+                image = cv2.addWeighted(color_mask, 0.5, image.astype(np.int), 1, 0)
 
-    # Show area outside image boundaries.
-    height, width = image.shape[:2]
-    ax.set_ylim(height, 0)
-    ax.set_xlim(0, width)
-    ax.axis('off')
-    ax.set_title(title)
+        if display_img:
+            plt.imshow(image)
+            plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
+            plt.show()
+        if save_img:
+            cv2.imwrite(os.path.join(save_dir, img_name), image)
 
-    masked_image = image.astype(np.uint32).copy()
-    for i in range(N):
-        color = colors[i]
-
-        # Bounding box
-        if not np.any(boxes[i]):
-            # Skip this instance. Has no bbox. Likely lost in image cropping.
-            continue
-        y1, x1, y2, x2 = boxes[i]
-        if show_bbox:
-            p = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=2,
-                                alpha=0.7, linestyle="dashed",
-                                edgecolor=color, facecolor='none')
-            ax.add_patch(p)
-
-        # Label
-        if not captions:
-            class_id = class_ids[i]
-            score = scores[i] if scores is not None else None
-            label = class_names[class_id]
-            caption = "{} {:.3f}".format(label, score) if score else label
-        else:
-            caption = captions[i]
-        ax.text(x1, y1 + 8, caption,
-                color='w', size=11, backgroundcolor="none")
-
-        # Mask
-        mask = masks[:, :, i]
-        if show_mask:
-            masked_image = apply_mask(masked_image, mask, color)
-
-        # Mask Polygon
-        # Pad to ensure proper polygons for masks that touch image edges.
-        padded_mask = np.zeros(
-            (mask.shape[0] + 2, mask.shape[1] + 2), dtype=np.uint8)
-        padded_mask[1:-1, 1:-1] = mask
-        contours = find_contours(padded_mask, 0.5)
-        for verts in contours:
-            # Subtract the padding and flip (y, x) to (x, y)
-            verts = np.fliplr(verts) - 1
-            p = Polygon(verts, facecolor="none", edgecolor=color)
-            ax.add_patch(p)
-    plt.savefig(savename,bbox_inches='tight')
-    
-    if auto_show:
-        plt.show()
+        return None
     
