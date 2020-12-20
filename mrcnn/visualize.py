@@ -6,13 +6,13 @@ Copyright (c) 2017 Matterport, Inc.
 Licensed under the MIT License (see LICENSE for details)
 Written by Waleed Abdulla
 """
-import cv2
+
 import os
 import sys
 import random
 import itertools
 import colorsys
-import time
+
 import numpy as np
 from skimage.measure import find_contours
 import matplotlib.pyplot as plt
@@ -163,17 +163,8 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
     ax.imshow(masked_image.astype(np.uint8))
-    plt.savefig(savename)#to save file in local directory for n no of input images with date and time 
-    
-   # plt.close()
-    #import time
-   # if os.path.exists('F:/la/output.jpg'):#to save file in local directory
-       # plt.savefig('output_{}.jpg'.format(int(time.time())))
-   # else:
-       # plt.savefig('output.jpg')
     if auto_show:
         plt.show()
-        
 
 
 def display_differences(image,
@@ -507,4 +498,3 @@ def display_weight_stats(model):
                 "{:+9.4f}".format(w.std()),
             ])
     display_table(table)
-
