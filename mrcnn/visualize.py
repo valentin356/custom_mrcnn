@@ -583,7 +583,7 @@ def save_image(image, boxes, masks, class_ids, class_names, savename,
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
     ax.imshow(masked_image.astype(np.uint8))
-    plt.savefig(savename)
+    plt.savefig(savename,bbox_inches='tight', pad_inches=-0.5,orientation= 'landscape')
     
     if auto_show:
         plt.show()
