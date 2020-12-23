@@ -163,8 +163,8 @@ def display_instances(image, boxes, masks, class_ids, class_names,iterationNum,
             p = Polygon(verts, facecolor="none", edgecolor=color)
             ax.add_patch(p)
     ax.imshow(masked_image.astype(np.uint8))
-    cv2.imwrite("/content/dataset/images/detected/"+ str(iterationNum) +"detected.png", masked_image)
-    print("dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+    imgName = "/content/dataset/images/detected/"+ str(iterationNum) +"detected.png"
+    cv2.imwrite(imageName, masked_image)
     if auto_show:
         plt.show()
         
