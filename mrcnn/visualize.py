@@ -164,7 +164,7 @@ def display_instances(image, boxes, masks, class_ids, class_names,
             ax.add_patch(p)
     ax.imshow(masked_image.astype(np.uint8))
     imgName = "/content/dataset/images/detected/"+ str(iterationNum) +"detected.png"
-    cv2.imwrite(imageName, masked_image)
+    cv2.imwrite(masked_image, imageName)
     if auto_show:
         plt.show()
         
